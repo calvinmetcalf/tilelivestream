@@ -18,7 +18,7 @@ describe('tilelivestream', function() {
         }
       });
       through.on('end', function(){
-        num.should.equal(16);
+        num.should.equal(17);
         done();
       });
       tileStream(data).pipe(through);
@@ -37,7 +37,7 @@ describe('tilelivestream', function() {
         }
       });
       through.on('end', function(){
-        num.should.equal(16);
+        num.should.equal(17);
         done();
       });
       tileStream(data).pipe(through);
@@ -56,7 +56,7 @@ describe('tilelivestream', function() {
         }
       });
       through.on('end', function(){
-        num.should.equal(32);
+        num.should.equal(34);
         done();
       });
       tileStream(data).pipe(through);
@@ -70,12 +70,13 @@ describe('tilelivestream', function() {
       }
       var through = es.mapSync(function(data){
         if(data.name){
+          delete data.center;
+          delete data.bounds;
+          delete data.filesize;
           data.should.deep.equal({
             scheme: 'tms',
             basename: 'test.mbtiles',
             id: 'test',
-            filesize: 393216,
-            bounds: [ -77.1408, 38.779, -76.893, 39.0088 ],
             minzoom: 6,
             maxzoom: 11,
             legend: '<!-- This legend uses Unicode box-drawing characters to approxmate line styles. -->\n<span style=\'color:#F56544\'>━</span> Motorways <br />\n<span style=\'color:#FFC53C\'>━</span> Main roads <br />\n<span style=\'color:#ccc\'>━</span> Other roads <br />\n<span style=\'color:#AC9\'>┉</span> Bike paths <br />\n<span style=\'color:#9CA\'>┉</span> Foot paths <br />\n<span style=\'color:#cea\'>▉</span> Park <br />\n<span style=\'color:#f8e8c8\'>▉</span> School <br />\n<span style=\'color:#c0d8ff\'>▉</span> Water',
@@ -83,8 +84,7 @@ describe('tilelivestream', function() {
             description: 'An example of street-level map design.',
             attribution: 'Data used by this map is © OpenStreetMap contributors,  CC-BY-SA. See <http://openstreetmap.org> for more info.',
             template: '{{#__location__}}{{/__location__}}{{#__teaser__}}{{/__teaser__}}{{#__full__}}<ul><li>\n{{{id}}}</li><li>\n{{{osm_id}}}</li><li>\n{{{name}}}</li><li>\n{{{type}}}</li><li>\n{{{area}}}</li><li>\n{{{z_order}}}\n</li></ul>{{/__full__}}',
-            version: '1.0.0',
-            center: [ -77.01689999999999, 38.8939, 8 ] 
+            version: '1.0.0'
           });
           done();
         }

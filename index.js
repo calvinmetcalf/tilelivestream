@@ -17,15 +17,14 @@ MakeStream.prototype._transform = function (data, encoding, callback) {
     todo = 1;
   }
   this.obj.getTile(data.z, data.x, data.y, function (err, tile) {
-    if (err) {
-      return callback(err);
+    if (tile) {
+      self.push({
+        x: data.x,
+        y: data.y,
+        z: data.z,
+        tile: tile
+      });
     }
-    self.push({
-      x: data.x,
-      y: data.y,
-      z: data.z,
-      tile: tile
-    });
     todo--;
     if(!todo){
       callback();
@@ -33,15 +32,14 @@ MakeStream.prototype._transform = function (data, encoding, callback) {
   });
   if(this.grid){
     this.obj.getGrid(data.z, data.x, data.y, function (err, grid) {
-    if (err) {
-      return callback(err);
+    if (grid) {
+      self.push({
+        x: data.x,
+        y: data.y,
+        z: data.z,
+        grid: grid
+      });
     }
-    self.push({
-      x: data.x,
-      y: data.y,
-      z: data.z,
-      grid: grid
-    });
     todo--;
     if(!todo){
       callback();

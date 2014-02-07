@@ -1,0 +1,30 @@
+{
+  "name": "tilelivestream",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:calvinmetcalf/tilelivestream.git"
+  },
+  "author": "Calvin Metcalf",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/calvinmetcalf/tilelivestream/issues"
+  },
+  "homepage": "https://github.com/calvinmetcalf/tilelivestream",
+  "dependencies": {
+    "streamoftiles": "~0.1.0",
+    "readable-stream": "~1.1.10"
+  },
+  "devDependencies": {
+    "event-stream": "~3.1.0",
+    "chai": "~1.9.0",
+    "mocha": "~1.17.1",
+    "tilelive": "~4.5.3",
+    "mbtiles": "~0.2.9"
+  }
+}

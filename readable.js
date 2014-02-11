@@ -70,7 +70,7 @@ MakeStream.prototype.prepare = function () {
       console.log(err);
       return;
     }
-    if(!info.minzoom||!info.maxzoom||!info.bounds){
+    if(typeof info.minzoom === 'undefined'||typeof info.maxzoom === 'undefined'||!Array.isArray(info.bounds)){
       return;
     }
     var minzoom = info.minzoom;

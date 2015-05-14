@@ -1,4 +1,4 @@
-var es = require('event-stream');
+var duplex = require('duplexer');
 var ReadStream = require('./readable');
 var WriteStream = require('./writable');
 module.exports = function(obj){
@@ -7,5 +7,5 @@ module.exports = function(obj){
   writable.on('info', function(){
     readable.prepare();
   });
-  return es.duplex(writable, readable);
+  return duplex(writable, readable);
 };

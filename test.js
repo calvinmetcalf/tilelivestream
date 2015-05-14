@@ -2,7 +2,7 @@ var tileStream = require('./');
 var Readable = require('./readable');
 var Writeable = require('./writable');
 var MBTiles = require('mbtiles');
-var es = require('event-stream');
+var through2 = require('through2');
 var should = require('chai').should();
 var fs = require('fs');
 describe('tilelivestream', function() {
@@ -14,16 +14,16 @@ describe('tilelivestream', function() {
           return;
         }
         var num = 0;
-        var through = es.mapSync(function(data){
+        tileStream(data).pipe(through2.obj(function(data, _, next){
           if(data.tile){
             num++;
           }
-        });
-        through.on('end', function(){
+          next();
+        }, function(next){
           num.should.equal(17);
           done();
-        });
-        tileStream(data).pipe(through);
+          next();
+        }));
       });
     });
     it('should work with grids', function(done){
@@ -33,16 +33,16 @@ describe('tilelivestream', function() {
           return;
         }
         var num = 0;
-        var through = es.mapSync(function(data){
+        tileStream(data).pipe(through2.obj(function(data, _, next){
           if(data.grid){
             num++;
           }
-        });
-        through.on('end', function(){
+          next();
+        }, function(next){
           num.should.equal(17);
           done();
-        });
-        tileStream(data).pipe(through);
+          next();
+        }));
       });
     });
     it('should work with both', function(done){
@@ -52,16 +52,16 @@ describe('tilelivestream', function() {
           return;
         }
         var num = 0;
-        var through = es.mapSync(function(data){
-          if(data.grid||data.tile){
+        tileStream(data).pipe(through2.obj(function(data, _, next){
+          if(data.tile||data.grid){
             num++;
           }
-        });
-        through.on('end', function(){
+          next();
+        }, function(next){
           num.should.equal(34);
           done();
-        });
-        tileStream(data).pipe(through);
+          next();
+        }));
       });
     });
     it('should get info', function(done){
@@ -70,7 +70,7 @@ describe('tilelivestream', function() {
           done(err);
           return;
         }
-        var through = es.mapSync(function(data){
+        tileStream(data).pipe(through2.obj(function(data, _, next){
           if(data.name){
             delete data.center;
             delete data.bounds;
@@ -90,8 +90,8 @@ describe('tilelivestream', function() {
             });
             done();
           }
-        });
-        tileStream(data).pipe(through);
+          next();
+        }));
       });
     });
   });
@@ -108,22 +108,22 @@ describe('tilelivestream', function() {
         }
         new MBTiles('./test2.mbtiles', function(err, db2) {
           var num = 0;
-          var through = es.mapSync(function(data){
-            if(data.grid||data.tile){
-              num++;
-            }
-          });
-          through.on('end', function(){
-            num.should.equal(34);
-            done();
-          });
           var n2 = 0;
           var s1 = new tileStream(db1);
           var s2 = new tileStream(db2);
           s1.pipe(s2);
           s1.on('end', function(){
             setTimeout(function(){
-                new tileStream(db2).pipe(through);
+                new tileStream(db2).pipe(through2.obj(function(data, _, next){
+                if(data.grid||data.tile){
+                  num++;
+                }
+                next();
+              }, function(next){
+                num.should.equal(34);
+                done();
+                next();
+              }));
             },1000);
           });
         });

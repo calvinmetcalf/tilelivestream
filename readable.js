@@ -3,10 +3,14 @@ var st = require('streamoftiles');
 var util = require('util');
 util.inherits(MakeStream, Transform);
 module.exports = MakeStream;
-function MakeStream(obj) {
+function MakeStream(obj, info) {
   Transform.call(this, {
     objectMode: true
   });
+  if (info) {
+    //console.log(info);
+    this.info = info;
+  }
   this.obj = obj;
   this.prepare();
 }
@@ -69,6 +73,9 @@ MakeStream.prototype.prepare = function () {
     if (err) {
       console.log(err);
       return;
+    }
+    if (self.info) {
+      info = self.info;
     }
     if(typeof info.minzoom === 'undefined'||typeof info.maxzoom === 'undefined'||!Array.isArray(info.bounds)){
       return;
